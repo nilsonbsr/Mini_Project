@@ -6,6 +6,7 @@ const useGetConversations = () => {
     const [loading, setLoading] = useState(false)
     const [conversations, setConversations] = useState([])
 
+    // sending fetch request
     useEffect(() => {
         const getConversations = async () => {
             setLoading(true)
