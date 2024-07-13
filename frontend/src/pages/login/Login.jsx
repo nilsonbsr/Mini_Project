@@ -1,6 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import useLogin from '../../hooks/useLogin'
+
 
 const Login = () => {
+
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+
+  const { login} = useLogin()
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    // Send a POST request to the server with the username and password
+    // If successful, set the authUser in the AuthContext
+    // If not, display an error message using toast
+    await login(username, password)
+  }
+
   return (
     <div className='flex 
                     flex-col
@@ -24,7 +42,7 @@ const Login = () => {
                             text-white'>
                                 Login into your Account
             </h1>
-            <form className='mt-6'>
+            <form className='mt-6' onSubmit={handleSubmit}>
                 <div>
                     <label className='label'>
                         <span className='text-base
@@ -39,7 +57,9 @@ const Login = () => {
                          input-bordered
                          input-info
                          w-full
-                         max-w-xs" />
+                         max-w-xs" 
+                         value={username}
+                         onChange={(e) => setUsername(e.target.value)}/>
                 </div>
                 <div>
                     <label className='label'>
@@ -55,15 +75,17 @@ const Login = () => {
                          input-bordered
                          input-info
                          w-full
-                         max-w-xs" />
+                         max-w-xs" 
+                         value={password}
+                         onChange={(e) => setPassword(e.target.value)}/>
                 </div>
-                <a href='#' className='text-sm
+                <Link to='/signup' className='text-sm
                                        hover:BiUnderline
                                        hover:text-blue-500
                                        mt-3
                                        inline-block'>
                                         {"Don't"} have an account?
-                </a>
+                </Link>
                 <div>
                   <button className= 'btn btn-primary btn-block btn-sm mt-3'>
                     Login

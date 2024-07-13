@@ -1,7 +1,31 @@
-import React from 'react'
+//import React from 'react'
 import GenderCheckbox from './GenderCheckbox'
+import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import useSignup from '../../hooks/useSignup'
+
 
 const SignUp = () => {
+  const [inputs, setInputs] = useState({
+    fullName: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+    gender: "",
+  });
+
+  const { loading, signup } = useSignup();
+
+  const handleCheckboxChange = (gender) => {
+    setInputs({ ...inputs, gender });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await signup(inputs);
+  };
+
+
   return (
     <div className='flex
                    flex-col
@@ -23,7 +47,7 @@ const SignUp = () => {
                             text-center
                             text-white'>Create an account</h1>
 
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div>
                 <label className='label'>
                         <span className='text-base
@@ -38,7 +62,10 @@ const SignUp = () => {
                          input-bordered
                          input-info
                          w-full
-                         max-w-xs" />
+                         max-w-xs" 
+                         value={inputs.fullName} 
+                         onChange={(e) => setInputs({...inputs, fullName: e.target.value})}
+                         />
                 </div>
                 <div>
                 <label className='label'>
@@ -54,7 +81,9 @@ const SignUp = () => {
                          input-bordered
                          input-info
                          w-full
-                         max-w-xs" />
+                         max-w-xs" 
+                         value={inputs.username} 
+                         onChange={(e) => setInputs({...inputs, username: e.target.value})}/>
                 </div>
                 <div>
                 <label className='label'>
@@ -70,7 +99,9 @@ const SignUp = () => {
                          input-bordered
                          input-info
                          w-full
-                         max-w-xs" />
+                         max-w-xs" 
+                         value={inputs.password} 
+                         onChange={(e) => setInputs({...inputs, password: e.target.value})}/>
                 </div>
                 <div>
                 <label className='label'>
@@ -86,16 +117,18 @@ const SignUp = () => {
                          input-bordered
                          input-info
                          w-full
-                         max-w-xs" />
+                         max-w-xs" 
+                         value={inputs.confirmPassword} 
+                         onChange={(e) => setInputs({...inputs, confirmPassword: e.target.value})}/>
                 </div>
-               <GenderCheckbox />
-                <a href='#' className='text-sm
+               <GenderCheckbox onCheckboxChange = {handleCheckboxChange} selectedGender={inputs.gender}/>
+                <Link to={"/login"} className='text-sm
                                        hover:BiUnderline
                                        hover:text-blue-500
                                        mt-3
                                        inline-block'>
                                         Already have an account?
-                </a>
+                </Link>
                 <div>
                 <button className= 'btn btn-primary btn-block btn-sm mt-3'>
                     Sign Up
