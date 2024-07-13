@@ -4,86 +4,63 @@ import Message from '../models/message.model.js'
 // send msgs btw users
 export const sendMessage = async function(req, res) {
     
-    try{
-        // get message from user as input
-        const {message} = req.body
-        const {id: receiverId} = req.params
+    try {
+		const { message } = req.body;
+		const { id: receiverId } = req.params;
+		const senderId = req.user._id;
 
-        // get the senderId using middleware
-        const senderId = req.user._id
+		let conversation = await Conversation.findOne({
+			participants: { $all: [senderId, receiverId] },
+		});
 
-        // find all the conversation btw users sender and receiver
-        let conversation = await Conversation.findOne({
-            participants: {$all: [senderId, receiverId]}
-        })
+		if (!conversation) {
+			conversation = await Conversation.create({
+				participants: [senderId, receiverId],
+			});
+		}
 
-        //create conversation
-        if(!conversation){
-            conversation = await Conversation.create({
-                participants: [senderId, receiverId],
-                // messages: [message]
-            })
+		const newMessage = new Message({
+			senderId,
+			receiverId,
+			message,
+		});
 
-        }
-
-        const newMessage = new Message({
-            senderId: senderId,
-            receiverId: receiverId,
-            message: message
-        })
-
-        if(newMessage){
-            conversation.messages.push(newMessage._id)
-        }
+		if (newMessage) {
+			conversation.messages.push(newMessage._id);
+		}
 
         // Socket.io functionality for real-time experience
 
         // save conversation and messages in database
         await conversation.save()
         await newMessage.save()
-        res.status(201).json(newMessage)
-
-    }catch(e){
-        console.log("Error sending message", e.message)
-        res.status(500).json({error: "Internal Server Error"})
-    }
-}
+        res.status(201).json(newMessage);
+	} catch (error) {
+		console.log("Error in sendMessage controller: ", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
 
 // get msgs btw two users 
-export const getMessage = async function(req, res) {
-    try{
-        // rename id to userTooChatId
-        const {id: userToChatId} = req.params
-        const senderId = req.user._id
 
-     
-        // get conversation list btw two users
-        const conversation = await Conversation.findOne({ 
-            participants: {$all: [senderId, userToChatId] },
-        
-        })
-        if (conversation){
-            const messages = await Message.find({_id: {$in: conversation.messages}})
+export const getMessages = async (req, res) => {
+	try {
+		const { id: userToChatId } = req.params;
+		const senderId = req.user._id;
 
-            /* const decryptedMessage = messages.map(message => {
-                message.conversation(message.content)
-                return message
-            })
- */
-            //conversation.messages = decryptedMessage
-            conversation.messages = messages
-        }
-        if (!conversation) return res.status(200).json([])
+		const conversation = await Conversation.findOne({
+			participants: { $all: [senderId, userToChatId] },
+		}).populate("messages"); // NOT REFERENCE BUT ACTUAL MESSAGES
 
-        res.status(200).json(conversation.messages);
-        
-         
+		if (!conversation) return res.status(200).json([]);
 
-    }catch(e){
-        console.log("Error sending message", e.message)
-        res.status(500).json({error: "Internal Server Error"})
-    }
+		const messages = conversation.messages;
 
-}
+		res.status(200).json(messages);
+	} catch (error) {
+		console.log("Error in getMessages controller: ", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
 
 // completed

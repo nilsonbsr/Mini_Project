@@ -16,15 +16,14 @@ const SignUp = () => {
 
   const { loading, signup } = useSignup();
 
-  const handleCheckboxChange = (gender) => {
-    setInputs({ ...inputs, gender });
-  };
+	const handleCheckboxChange = (gender) => {
+		setInputs({ ...inputs, gender });
+	};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await signup(inputs);
-  };
-
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		await signup(inputs);
+	};
 
   return (
     <div className='flex
@@ -63,8 +62,8 @@ const SignUp = () => {
                          input-info
                          w-full
                          max-w-xs" 
-                         value={inputs.fullName} 
-                         onChange={(e) => setInputs({...inputs, fullName: e.target.value})}
+                         value={inputs.fullName}
+							            onChange={(e) => setInputs({ ...inputs, fullName: e.target.value })}
                          />
                 </div>
                 <div>

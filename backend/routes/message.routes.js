@@ -1,20 +1,10 @@
-import express from 'express';
-import { sendMessage } from '../controllers/message.controller.js';
-import protectRoute from '../middleware/protectRoute.js';
-import { getMessage } from '../controllers/message.controller.js';
+import express from "express";
+import { getMessages, sendMessage } from "../controllers/message.controller.js";
+import protectRoute from "../middleware/protectRoute.js";
 
-// create Router
 const router = express.Router();
 
-// get msg
-router.get("/:id", protectRoute, getMessage)
+router.get("/:id", protectRoute, getMessages);
+router.post("/send/:id", protectRoute, sendMessage);
 
-// send msg
-router.post("/send/:id", protectRoute, sendMessage)
-
-
-
-
-
-
-export default router
+export default router;

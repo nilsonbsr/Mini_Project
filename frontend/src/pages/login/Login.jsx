@@ -5,14 +5,13 @@ import useLogin from '../../hooks/useLogin'
 
 const Login = () => {
 
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
 
-  const { login} = useLogin()
+	const { loading, login } = useLogin();
 
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+	const handleSubmit = async (e) => {
+		e.preventDefault();
     // Send a POST request to the server with the username and password
     // If successful, set the authUser in the AuthContext
     // If not, display an error message using toast
@@ -87,8 +86,9 @@ const Login = () => {
                                         {"Don't"} have an account?
                 </Link>
                 <div>
-                  <button className= 'btn btn-primary btn-block btn-sm mt-3'>
-                    Login
+                  <button className= 'btn btn-primary btn-block btn-sm mt-3' disabled={loading}>
+                  {loading ? <span className='loading loading-spinner '></span> : "Login"}
+                    
                   </button>
                 </div>
             </form>
