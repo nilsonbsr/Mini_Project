@@ -1,14 +1,12 @@
-import { createContext } from "react";
-import  {useState, useEffect} from "react"
+import { createContext, useState, useEffect, useContext } from "react";
 import { useAuthContext } from "./AuthContext";
-import io from'socket.io-client'
-import { useContext } from "react";
+import io from "socket.io-client";
 
-const SocketContext = createContext()
+const SocketContext = createContext();
 
 export const useSocketContext = () => {
-    return useContext(SocketContext);
-}
+	return useContext(SocketContext);
+};
 
 // create a provider 
 export const SocketContextProvider = ({ children }) => {
@@ -27,17 +25,20 @@ export const SocketContextProvider = ({ children }) => {
             })
 
             setSocket(socket)
-            socket.on("getOnlineUsers", (users) =>{
-                setOnlineUsers(users)
-            })
-            return () => socket.close()
-        } else {
-            if(socket) {
-                socket.close()
-                setSocket(null)
-            }
-        }
-    }, [authUser])
 
-    return <SocketContext.Provider value={{socket, onlineUsers}}>{children}</SocketContext.Provider>;
+
+			socket.on("getOnlineUsers", (users) => {
+				setOnlineUsers(users);
+			});
+
+			return () => socket.close();
+		} else {
+			if (socket) {
+				socket.close();
+				setSocket(null);
+			}
+		}
+	}, [authUser]);
+
+	return <SocketContext.Provider value={{ socket, onlineUsers }}>{children}</SocketContext.Provider>;
 };

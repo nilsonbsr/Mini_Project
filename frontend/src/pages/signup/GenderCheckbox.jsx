@@ -5,8 +5,8 @@ const GenderCheckbox = ({ onCheckboxChange, selectedGender }) => {
 				<label className={`label gap-2 cursor-pointer ${selectedGender === "male" ? "selected" : ""} `}>
 					<span className='label-text'>Male</span>
 					<input
-						type='checkbox'
-						className='checkbox checkbox-sm border-orange-400 [--chkbg:theme(colors.indigo.600)] [--chkfg:orange] checked:border-indigo-800 '
+						type='radio'
+						className='radio radio-sm border-orange-400 [--chkbg:theme(colors.indigo.600)] [--chkfg:orange] checked:border-indigo-800 '
 						checked={selectedGender === "male"}
 						onChange={() => onCheckboxChange("male")}
 					/>
@@ -16,13 +16,26 @@ const GenderCheckbox = ({ onCheckboxChange, selectedGender }) => {
 				<label className={`label gap-2 cursor-pointer  ${selectedGender === "female" ? "selected" : ""}`}>
 					<span className='label-text'>Female</span>
 					<input
-						type='checkbox'
-						className='checkbox checkbox-sm border-orange-400 [--chkbg:theme(colors.indigo.600)] [--chkfg:orange] checked:border-indigo-800'
+						type='radio'
+						className='radio radio-sm border-orange-400 [--chkbg:theme(colors.indigo.600)] [--chkfg:orange] checked:border-indigo-800'
 						checked={selectedGender === "female"}
 						onChange={() => onCheckboxChange("female")}
 					/>
 				</label>
 			</div>
+
+			<div className='form-control'>
+				<label className={`label gap-2 cursor-pointer  ${selectedGender === "other" ? "selected" : ""}`}>
+					<span className='label-text'>Other</span>
+					<input
+						type='radio'
+						className='radio radio-sm border-orange-400 [--chkbg:theme(colors.indigo.600)] [--chkfg:orange] checked:border-indigo-800'
+						checked={selectedGender === "other"}
+						onChange={() => onCheckboxChange("other")}
+					/>
+				</label>
+			</div>
+			
 		</div>
 	)
 } 
