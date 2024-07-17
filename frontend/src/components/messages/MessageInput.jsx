@@ -1,6 +1,7 @@
 import React from 'react'
 import { BsSend } from "react-icons/bs";
 import useSendMessage from '../../hooks/useSendMessage';
+import { replaceWordsWithEmojis } from '../../../../backend/utils/replaceWord';
 
 const MessageInput = () => {
 
@@ -12,7 +13,10 @@ const MessageInput = () => {
 		// to prevent sent empty message!
 		if(!message){
 			return;
-		} await sendMessage(message)
+		} 
+		
+		const newMessage = replaceWordsWithEmojis(message);
+		await sendMessage(message)
 		setMessage("")
 	}
 

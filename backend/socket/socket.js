@@ -1,6 +1,8 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+//import {replaceWordsWithEmojis} from "../utils/replaceWordsWithEmojis";
+
 
 const app = express();
 
@@ -16,22 +18,23 @@ export const getReceiverSocketId = (receiverId) => {
 	return userSocketMap[receiverId];
 };
 
+const userSocketMap = {}; // {userId: socketId}
 
-
-const userSocketMap = {}; 
-
-// listener socket
 io.on("connection", (socket) => {
 	console.log("a user connected", socket.id);
 
-    // go to SocketContext and got the query string
 	const userId = socket.handshake.query.userId;
 	if (userId != "undefined") userSocketMap[userId] = socket.id;
 
-	// send event to all connected clients
+	// io.emit() is used to send events to all the connected clients
 	io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
-	// listen to events- delete the user id after disconnecting
+/* 	socket.on("chat-message", (msg) => {
+		const newMessage = replaceWordsWithEmojis(msg);
+		io.emit("chat-message", newMessage)
+	}) */
+
+	// socket.on() is used to listen to the events. can be used both on client and server side
 	socket.on("disconnect", () => {
 		console.log("user disconnected", socket.id);
 		delete userSocketMap[userId];
@@ -40,5 +43,3 @@ io.on("connection", (socket) => {
 });
 
 export { app, io, server };
-
-
